@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kabuto-Lub 昆虫繁育管理</title>
+  <style>
+    body {
+      font-family: -apple-system, sans-serif;
+      background: #f3f5f1;
+      margin: 0;
+      padding: 20px;
+      color: #24352a;
+    }
+    h1 { color: #326b48; }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 15px 0;
+      box-shadow: 0 3px 12px #00000010;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 7px 0;
+      box-sizing: border-box;
+      border-radius: 9px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+    button {
+      background: #326b48;
+      color: white;
+      border: none;
+    }
+    .item {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🪲 Kabuto-Lub</h1>
+  <p>我的昆虫繁育管理系统</p>
+
+  <div class="card">
+    <h2>添加昆虫</h2>
+    <input id="name" placeholder="昆虫编号，例如 NL001">
+    <input id="species" placeholder="品种，例如 南洋大兜">
+    <select id="sex">
+      <option value="公">公虫</option>
+      <option value="母">母虫</option>
+      <option value="未知">未知</option>
+    </select>
+    <button onclick="addInsect()">保存昆虫档案</button>
+  </div>
+
+  <div class="card">
+    <h2>我的昆虫</h2>
+    <div id="list"></div>
+  </div>
+
+  <script>
+    let insects = JSON.parse(
+      localStorage.getItem("kabuto_insects") || "[]"
+    );
+
+    function addInsect() {
+      const name = document.getElementById("name").value.trim();
+      const species = document.getElementById("species").value.trim();
+      const sex = document.getElementById("sex").value;
+
+      if (!name || !species) {
+        alert("请填写编号和品种");
+        return;
+      }
+
+      insects.push({ name, species, sex });
+      localStorage.setItem("kabuto_insects", JSON.stringify(insects));
+
+      document.getElementById("name").value = "";
+      document.getElementById("species").value = "";
+
+      render();
+    }
+
+    function render() {
+      const list = document.getElementById("list");
+
+      list.innerHTML = "";
+
+      insects.forEach(insect => {
+        const item = document.createElement("div");
+        item.className = "item";
+        item.textContent =
+          "🪲 " + insect.name +
+          "｜" + insect.species +
+          "｜" + insect.sex;
+        list.appendChild(item);
+      });
+    }
+
+    render();
+  </script>
+
+</body>
+</html>
